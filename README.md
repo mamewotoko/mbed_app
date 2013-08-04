@@ -1,5 +1,5 @@
 ===============================================================================
-mbed_app: mbed sample app build by make
+mbed_app: mbed sample app built by make
 ===============================================================================
 
 How to build mbed SDK
