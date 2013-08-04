@@ -1,7 +1,8 @@
-APPNAME = hello
+APPNAME = hello_lcd
 #TODO: replace
-APPOBJ = build/main.o
+APPOBJ =  build/TextLCD.o build/main.o
 MBEDPATH = /media/tak/MBED
+APP_INCLUDE = -Ilib/textlcd
 
 TOPDIR = /home/tak/dev/mbed/
 MBED_SDK_PATH = $(TOPDIR)/build
@@ -20,7 +21,8 @@ LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc \
 
 INCLUDE = -I$(MBED_SDK_PATH)/mbed \
 -I$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET) \
--I$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
+-I$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN) \
+$(APP_INCLUDE)
 
 ARCHOPT = -mcpu=cortex-m3 -mthumb
 
@@ -48,6 +50,10 @@ bin build:
 
 build/$(APPNAME).elf: $(APPOBJ)
 	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBPATY_PATH) -o $@
+
+## ummm: create library
+build/TextLCD.o: lib/textlcd/TextLCD.cpp
+	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
 
 build/%.o: src/%.cpp
 	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
