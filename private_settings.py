@@ -42,6 +42,7 @@ if armcc == "keil":
 
 elif armcc == "standalone":
     #ARM_PATH = "C:/Program Files/ARM/armcc_4.1_791"
+    # modified
     ARM_PATH = "/home/tak/dev/mbed/toolchain/gcc-arm-none-eabi-4_7-2012q4/arm-none-eabi"
     ARM_BIN = join(ARM_PATH, "bin")
     ARM_INC = join(ARM_PATH, "include")
@@ -57,6 +58,7 @@ ARM_CPPLIB = join(ARM_LIB, "cpplib")
 MY_ARM_CLIB = join(ARM_PATH, "lib", "microlib")
 
 # GCC ARM
+# modified
 GCC_ARM_PATH = "/home/tak/dev/mbed/toolchain/gcc-arm-none-eabi-4_7-2012q4/bin"
 
 # GCC CodeSourcery
