@@ -1,6 +1,5 @@
 APPNAME = hello
-#TODO: replace
-APPOBJ = build/main.o
+SRC = src/main.cpp
 MBEDPATH = /media/tak/MBED
 
 TOPDIR = /home/tak/dev/mbed/
@@ -24,10 +23,13 @@ INCLUDE = -I$(MBED_SDK_PATH)/mbed \
 
 ARCHOPT = -mcpu=cortex-m3 -mthumb
 
-CCOPT = $(ARCHOPT) -std=gnu++98 -c -O2 -Wall -fmessage-length=0 -fno-exceptions \
+BASEOPT =  $(ARCHOPT) -c -O2 -Wall -fmessage-length=0 -fno-exceptions \
 -fno-builtin -ffunction-sections -fdata-sections -MMD \
 -DTARGET_LPC1768 -DTARGET_M3 -DTARGET_NXP -DTARGET_LPC176X \
 -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M3 -DARM_MATH_CM3
+
+CPPOPT = -std=gnu++98 $(BASEOPT)
+COPT = -std=gnu99 $(BASEOPT)
 
 LDOPT = $(ARCHOPT) -Wl,--gc-sections --specs=nano.specs \
 -T$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/LPC1768.ld
@@ -37,20 +39,27 @@ $(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/cmsis_nvic.o \
 $(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/startup_LPC17xx.o \
 $(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/retarget.o
 
+APPOBJ_ = $(subst src,build,$(SRC))
+APPOBJ__ = $(APPOBJ_:.c=.o)
+APPOBJ = $(APPOBJ__:.cpp=.o)
+
 all: bin build bin/$(APPNAME).bin
+
+bin build:
+	mkdir $@
 
 bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
 	python $(PATCHAPP) $@
 
-bin build:
-	mkdir $@
-
 build/$(APPNAME).elf: $(APPOBJ)
 	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBPATY_PATH) -o $@
 
 build/%.o: src/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CPPOPT) -c $< -o $@
+
+build/%.o: src/%.c
+	$(CC) $(INCLUDE) $(COPT) -c $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)
