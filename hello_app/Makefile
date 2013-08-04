@@ -1,18 +1,21 @@
 APPNAME = hello
 SRC = src/main.cpp
-MBEDPATH = /media/tak/MBED
 
+MBEDPATH = /media/tak/MBED
+TARGET = LPC1768
 TOPDIR = /home/tak/dev/mbed/
 MBED_SDK_PATH = $(TOPDIR)/build
 PATCHAPP = $(TOPDIR)/mbed/workspace_tools/patch.py
 TOOLCHAIN_PATH = /home/tak/dev/mbed/toolchain/gcc-arm-none-eabi-4_7-2012q4/bin/
-TARGET = LPC1768
-TOOLCHAIN = GCC_ARM
 
-TOOLCHAIN_PREFIX = arm-none-eabi-
-CC = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)gcc
-CPP = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)g++
-OBJCOPY = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)objcopy
+TOOLCHAIN = GCC_ARM
+TOOLCHAIN_PREFIX = arm-none-eabi
+
+CC = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
+CPP = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-g++
+OBJCOPY = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-objcopy
+AR = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-ar
+
 LIBPATY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
 LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc \
 -lnosys -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
