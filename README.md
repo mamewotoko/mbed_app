@@ -34,7 +34,8 @@ App projects
 * hello_app
  printf and led, only depend on mbed
 * hello_led_app
- use library
+ use TextLCD library, target is StarBoard Orange
+ http://mbed.org/users/simon/code/TextLCD/
 
 Files in app project
 --------------------
@@ -51,10 +52,14 @@ TODO
 -----------
 * create starbord orange library
    * some libraries are contained in mbed (SD, FATFileSystem ...)
+* create more sophisticated Makefile
+   * make subdir under build directory automatically
 
 Reference
 ---------
 * http://mbed.org/handbook/mbed-tools
+* StarBoard Orange
+  http://mbed.org/cookbook/StarBoard-Orange
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
