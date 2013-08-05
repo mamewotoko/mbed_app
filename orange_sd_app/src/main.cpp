@@ -10,9 +10,12 @@ SDFileSystem sd(p5, p6, p7, p8, "sd");
 DigitalOut myled(LED3);
 
 int main() {
+  lcd.cls();
+  lcd.locate(0, 0);
+  wait(1);
   lcd.printf("Hello mbed\n");
   
-  FILE *fp = fopen("hello.txt", "w");
+  FILE *fp = fopen("/sd/hello.txt", "w");
   if(fp == NULL){
     lcd.printf("file write error\n");
     error("Could not open file for write\n");

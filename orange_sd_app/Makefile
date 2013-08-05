@@ -62,7 +62,7 @@ bin/$(APPNAME).bin: build/$(APPNAME).elf
 	python $(PATCHAPP) $@
 
 build/$(APPNAME).elf: $(APPOBJ) $(LIBOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBPATY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBPATY_PATH) -o $@
 
 ## ummm: create library
 
