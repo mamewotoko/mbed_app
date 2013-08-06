@@ -50,10 +50,12 @@ TOOLCHAIN_PATH: arm compiler available from the following web page
 
 TODO
 -----------
+* ethernet sample, USB sample
 * create starbord orange library
    * some libraries are contained in mbed (SD, FATFileSystem ...)
 * create more sophisticated Makefile
    * make subdir under build directory automatically
+* build SDFileSystem, FAT using build.py
 
 Reference
 ---------
