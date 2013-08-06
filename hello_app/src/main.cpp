@@ -1,4 +1,4 @@
-#include "mbed.h"
+#include <mbed.h>
 
 DigitalOut myled(LED1);
 DigitalOut myled2(LED2);

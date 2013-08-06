@@ -10,13 +10,16 @@ DigitalOut myled2(LED2);
 DigitalOut myled(LED4);
 
 int main() {
-  lcd.cls();
   wait(1);
   myled1 = 1;
-  
-  lcd.printf("Hello USB!!!!");
+  lcd.cls();
+  lcd.printf("Hello USB!!!!\n");
 
+  printf("fopen: usb/....");
   FILE *fp = fopen("/usb/usbwrite.txt", "w");
+
+#if 0  
+  printf("FP: %X\n", fp);
   myled2 = 1;
   if(fp == NULL){
     lcd.printf("write failed");
@@ -30,4 +33,5 @@ int main() {
     wait(0.5);
     myled = !myled;
   }
+#endif
 }
