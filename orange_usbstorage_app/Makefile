@@ -76,7 +76,7 @@ build/%.o: src/%.cpp
 	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
 
 build/%.o: lib/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) -E $(INCLUDE) $(CCOPT) $< -o $@
 
 build/%.o: lib/%.c
 	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@

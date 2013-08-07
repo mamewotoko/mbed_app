@@ -18,8 +18,6 @@ int main() {
   printf("fopen: usb/....");
   FILE *fp = fopen("/usb/usbwrite.txt", "w");
 
-#if 0  
-  printf("FP: %X\n", fp);
   myled2 = 1;
   if(fp == NULL){
     lcd.printf("write failed");
@@ -33,5 +31,4 @@ int main() {
     wait(0.5);
     myled = !myled;
   }
-#endif
 }

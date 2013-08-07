@@ -20,8 +20,8 @@ How to build mbed SDK
 How to try mbed app
 -------------------
 1. Connect mbed device to PC by usb cable
-2. cd hello_app
-3. modify MBED_PATH TARGET TOPDIR MBED_SDK_PATH TOOLCHAIN_PATH
+2. edit Makefile.config to modify MBED_PATH TARGET TOPDIR MBED_SDK_PATH TOOLCHAIN_PATH 
+3. cd hello_app
 4. make
 5. make install
 6. In case of linux

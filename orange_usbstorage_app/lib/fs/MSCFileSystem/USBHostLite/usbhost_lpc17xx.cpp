@@ -201,6 +201,7 @@ void  Host_Init (void)
                          OR_INTR_ENABLE_RHSC;
 
     NVIC_SetPriority(USB_IRQn, 0);       /* highest priority */
+    PRINT_Log("before enable IRQ\n");
     /* Enable the USB Interrupt */
     NVIC_EnableIRQ(USB_IRQn);
     PRINT_Log("Host Initialized\n");
