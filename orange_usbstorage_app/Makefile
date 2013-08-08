@@ -5,7 +5,6 @@ MBEDPATH = /media/tak/MBED
 
 TOPDIR = /home/tak/dev/mbed/
 MBED_SDK_PATH = $(TOPDIR)/build
-PATCHAPP = $(TOPDIR)/mbed/workspace_tools/patch.py
 TOOLCHAIN_PATH = /home/tak/dev/mbed/toolchain/gcc-arm-none-eabi-4_7-2012q4/bin/
 TARGET = LPC1768
 TOOLCHAIN = GCC_ARM
@@ -16,7 +15,7 @@ CPP = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-g++
 OBJCOPY = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-objcopy
 LD = $(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-ld
 
-LIBPATY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
+LIBRARY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
 LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc \
 -lnosys -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
@@ -31,7 +30,8 @@ INCLUDE = -I$(MBED_SDK_PATH)/mbed \
 
 ARCHOPT = -mcpu=cortex-m3 -mthumb
 
-CCOPT = $(ARCHOPT) -std=gnu++98 -c -O2 -Wall -fmessage-length=0 -fno-exceptions \
+#CCOPT = $(ARCHOPT) -std=gnu++98 -c -O2 -Wall -fmessage-length=0 -fno-exceptions 
+CCOPT = $(ARCHOPT) -std=gnu++98 -c -Wall -fmessage-length=0 -fno-exceptions \
 -fno-builtin -ffunction-sections -fdata-sections -MMD \
 -DTARGET_LPC1768 -DTARGET_M3 -DTARGET_NXP -DTARGET_LPC176X \
 -DTOOLCHAIN_GCC_ARM -DTOOLCHAIN_GCC -D__CORTEX_M3 -DARM_MATH_CM3
@@ -59,24 +59,26 @@ LIBOBJ_ = $(LIBSRC:.cpp=.o)
 LIBOBJ__ = $(LIBOBJ_:.c=.o)
 LIBOBJ = $(subst lib/,build/,$(LIBOBJ__))
 
-all: __INIT__ bin/$(APPNAME).bin
+all: __INIT__ bin/$(APPNAME).bin build/fs/MSCFileSystem/USBHostLite/usbhost_lpc17xx.s
 
 __INIT__:
 	mkdir -p bin build build/textlcd build/fs/FATFileSystem/ChaN build/fs/MSCFileSystem/USBHostLite
 
 bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
-	python $(PATCHAPP) $@
 
 build/$(APPNAME).elf: $(APPOBJ) $(LIBOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBPATY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBRARY_PATH) -o $@
 
 ## ummm: create library
 build/%.o: src/%.cpp
 	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
 
 build/%.o: lib/%.cpp
-	$(CC) -E $(INCLUDE) $(CCOPT) $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+
+build/%.s: lib/%.cpp
+	$(CC) $(INCLUDE) $(CCOPT) -S $<
 
 build/%.o: lib/%.c
 	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@

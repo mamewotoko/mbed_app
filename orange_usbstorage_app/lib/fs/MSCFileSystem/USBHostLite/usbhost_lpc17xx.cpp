@@ -201,14 +201,20 @@ void  Host_Init (void)
                          OR_INTR_ENABLE_RHSC;
 
     NVIC_SetPriority(USB_IRQn, 0);       /* highest priority */
-    PRINT_Log("before enable IRQ\n");
     /* Enable the USB Interrupt */
-    NVIC_EnableIRQ(USB_IRQn);
+    //NVIC_EnableIRQ_(USB_IRQn);
+    {
+      uint32_t bit = (1 << ((uint32_t)(USB_IRQn) & 0x1F)); /* enable interrupt */
+      uint32_t offset = ((uint32_t)(USB_IRQn) >> 5);
+      //set
+      PRINT_Log("before enable IRQ: %d\n", USB_IRQn);
+      ((NVIC_Type      *)(0xE000E100))->ISER[offset] = bit;
+    }
+    
     PRINT_Log("Host Initialized\n");
 }
 
-/*
-**************************************************************************************************************
+/**************************************************************************************************************
 *                                         INTERRUPT SERVICE ROUTINE
 *
 * Description: This function services the interrupt caused by host controller

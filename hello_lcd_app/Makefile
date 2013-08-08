@@ -6,27 +6,26 @@ include ../Makefile.config
 
 INCLUDE += -Ilib/textlcd
 
-LIBPATY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
+LIBRARY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
 LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 all: bin build bin/$(APPNAME).bin
 
 bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
-	python $(PATCHAPP) $@
 
 bin build:
 	mkdir $@
 
 build/$(APPNAME).elf: $(APPOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBPATY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBRARY_PATH) -o $@
 
 ## ummm: create library
 build/TextLCD.o: lib/textlcd/TextLCD.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 build/%.o: src/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)

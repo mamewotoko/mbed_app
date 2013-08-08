@@ -3,7 +3,7 @@ SRC = src/main.cpp
 
 include ../Makefile.config
 
-LIBPATY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
+LIBRARY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
 LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 APPOBJ_ = $(subst src,build,$(SRC))
@@ -17,17 +17,16 @@ __INIT__:
 
 bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
-	python $(PATCHAPP) $@
 
 build/$(APPNAME).elf: $(APPOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBPATY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBRARY_PATH) -o $@
 
 build/%.o: src/%.cpp
 	echo $<
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 build/%.o: src/%.c
-	$(CC) $(INCLUDE) $(COPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(COPT) $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)

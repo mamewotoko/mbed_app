@@ -6,7 +6,7 @@ include ../Makefile.config
 
 INCLUDE += -Ilib/textlcd -Ilib/fs/sd -Ilib/fs/fat -Ilib/fs/fat/ChaN
 
-LIBPATY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
+LIBRARY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
 LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 LIBSRC = lib/fs/sd/SDFileSystem.cpp \
@@ -31,18 +31,17 @@ __INIT__:
 
 bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
-	python $(PATCHAPP) $@
 
 build/$(APPNAME).elf: $(APPOBJ) $(LIBOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBPATY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBRARY_PATH) -o $@
 
 ## ummm: create library
 
 build/%.o: src/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 build/%.o: lib/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)
