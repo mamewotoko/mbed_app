@@ -10,13 +10,16 @@ DigitalOut myled2(LED2);
 DigitalOut myled(LED4);
 
 int main() {
+  myled1 = 0;
   wait(1);
-  myled1 = 1;
   lcd.cls();
-  lcd.printf("Hello USB!!!!\n");
+  myled1 = 1;
+  lcd.printf("Hello USB!\n");
+  printf("Hello USB! %p\n", &(NVIC->ISER[((uint32_t)(USB_IRQn) >> 5)]));
 
-  printf("fopen: usb/....");
   FILE *fp = fopen("/usb/usbwrite.txt", "w");
+
+  printf("after fopen\n");
 
   myled2 = 1;
   if(fp == NULL){

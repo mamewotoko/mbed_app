@@ -197,7 +197,9 @@ extern  volatile  USB_INT08U  *TDBuffer;        /* Current Buffer Pointer of tra
 
 void        Host_Init     (void);
 
+extern "C" {
 void USB_IRQHandler(void);
+}
 
 USB_INT32S  Host_EnumDev  (void);
 

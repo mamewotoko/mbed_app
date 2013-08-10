@@ -201,16 +201,9 @@ void  Host_Init (void)
                          OR_INTR_ENABLE_RHSC;
 
     NVIC_SetPriority(USB_IRQn, 0);       /* highest priority */
+
     /* Enable the USB Interrupt */
-    //NVIC_EnableIRQ_(USB_IRQn);
-    {
-      uint32_t bit = (1 << ((uint32_t)(USB_IRQn) & 0x1F)); /* enable interrupt */
-      uint32_t offset = ((uint32_t)(USB_IRQn) >> 5);
-      //set
-      PRINT_Log("before enable IRQ: %d\n", USB_IRQn);
-      ((NVIC_Type      *)(0xE000E100))->ISER[offset] = bit;
-    }
-    
+    NVIC_EnableIRQ(USB_IRQn);
     PRINT_Log("Host Initialized\n");
 }
 
@@ -226,6 +219,7 @@ void  Host_Init (void)
 **************************************************************************************************************
 */
 
+extern "C" {
 void USB_IRQHandler (void)
 {
     USB_INT32U   int_status;
@@ -285,6 +279,7 @@ void USB_IRQHandler (void)
         LPC_USB->HcInterruptStatus = int_status;                         /* Clear interrupt status register      */
     }
     return;
+}
 }
 
 /*
@@ -375,29 +370,34 @@ USB_INT32S  Host_EnumDev (void)
 {
     USB_INT32S  rc;
 
-    PRINT_Log("Connect a Mass Storage device\n");
     while (!HOST_RhscIntr)
         __WFI();
     Host_DelayMS(100);                             /* USB 2.0 spec says atleast 50ms delay beore port reset */
     LPC_USB->HcRhPortStatus1 = OR_RH_PORT_PRS; // Initiate port reset
+    PRINT_Log("Host_Dev return 1\n");
     while (LPC_USB->HcRhPortStatus1 & OR_RH_PORT_PRS)
         __WFI(); // Wait for port reset to complete...
+    PRINT_Log("Host_Dev return 1.5\n");
+
     LPC_USB->HcRhPortStatus1 = OR_RH_PORT_PRSC; // ...and clear port reset signal
     Host_DelayMS(200);                                                 /* Wait for 100 MS after port reset  */
 
     EDCtrl->Control = 8 << 16;                                         /* Put max pkt size = 8              */
+    PRINT_Log("Host_Dev return 2\n");
                                                                        /* Read first 8 bytes of device desc */
     rc = HOST_GET_DESCRIPTOR(USB_DESCRIPTOR_TYPE_DEVICE, 0, TDBuffer, 8);
     if (rc != OK) {
         PRINT_Err(rc);
         return (rc);
     }
+    PRINT_Log("Host_Dev return 3\n");
     EDCtrl->Control = TDBuffer[7] << 16;                               /* Get max pkt size of endpoint 0    */
     rc = HOST_SET_ADDRESS(1);                                          /* Set the device address to 1       */
     if (rc != OK) {
         PRINT_Err(rc);
         return (rc);
     }
+    PRINT_Log("Host_Dev return 4\n");
     Host_DelayMS(2);
     EDCtrl->Control = (EDCtrl->Control) | 1;                          /* Modify control pipe with address 1 */
                                                                       /* Get the configuration descriptor   */
@@ -406,6 +406,7 @@ USB_INT32S  Host_EnumDev (void)
         PRINT_Err(rc);
         return (rc);
     }
+    PRINT_Log("Host_Dev return 5\n");
                                                                        /* Get the first configuration data  */
     rc = HOST_GET_DESCRIPTOR(USB_DESCRIPTOR_TYPE_CONFIGURATION, 0, TDBuffer, ReadLE16U(&TDBuffer[2]));
     if (rc != OK) {
@@ -422,6 +423,7 @@ USB_INT32S  Host_EnumDev (void)
         PRINT_Err(rc);
     }
     Host_DelayMS(100);                                               /* Some devices may require this delay */
+    PRINT_Log("Host_Dev return end\n");
     return (rc);
 }
 

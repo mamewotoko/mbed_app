@@ -59,7 +59,7 @@ LIBOBJ_ = $(LIBSRC:.cpp=.o)
 LIBOBJ__ = $(LIBOBJ_:.c=.o)
 LIBOBJ = $(subst lib/,build/,$(LIBOBJ__))
 
-all: __INIT__ bin/$(APPNAME).bin build/fs/MSCFileSystem/USBHostLite/usbhost_lpc17xx.s
+all: __INIT__ bin/$(APPNAME).bin 
 
 __INIT__:
 	mkdir -p bin build build/textlcd build/fs/FATFileSystem/ChaN build/fs/MSCFileSystem/USBHostLite
@@ -68,20 +68,17 @@ bin/$(APPNAME).bin: build/$(APPNAME).elf
 	$(OBJCOPY) -O binary $< $@
 
 build/$(APPNAME).elf: $(APPOBJ) $(LIBOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $(APPOBJ) $(LIBOBJ) $(LIBRARIES) $(LIBRARY_PATH) -o $@
+	$(CC) $(LDOPT) $(LDOBJ) $(LIBOBJ) $(APPOBJ) $(LIBRARIES) $(LIBRARY_PATH) -o $@
 
 ## ummm: create library
 build/%.o: src/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@
 
 build/%.o: lib/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -c $< -o $@
-
-build/%.s: lib/%.cpp
-	$(CC) $(INCLUDE) $(CCOPT) -S $<
+	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@
 
 build/%.o: lib/%.c
-	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@
+	$(CC) $(INCLUDE) $(COPT) -c $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)
