@@ -15,7 +15,7 @@ int main() {
   lcd.cls();
   myled1 = 1;
   lcd.printf("Hello USB!\n");
-  printf("Hello USB! %p\n", &(NVIC->ISER[((uint32_t)(USB_IRQn) >> 5)]));
+  printf("Hello USB! %p =========================================================\n", &(NVIC->ISER[((uint32_t)(USB_IRQn) >> 5)]));
 
   FILE *fp = fopen("/usb/usbwrite.txt", "w");
 
@@ -24,7 +24,7 @@ int main() {
   myled2 = 1;
   if(fp == NULL){
     lcd.printf("write failed");
-    error("usb write failed");
+    error("usb write failed\n");
   }
 
   fprintf(fp, "write to usb memory\n");

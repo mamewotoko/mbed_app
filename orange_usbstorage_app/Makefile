@@ -45,8 +45,8 @@ $(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/startup_LPC17xx.o 
 $(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)/retarget.o
 
 LIBSRC = lib/textlcd/TextLCD.cpp \
-lib/fs/MSCFileSystem/USBHostLite/usbhost_ms.cpp \
-lib/fs/MSCFileSystem/USBHostLite/usbhost_lpc17xx.cpp \
+lib/fs/MSCFileSystem/USBHostLite/usbhost_ms.c \
+lib/fs/MSCFileSystem/USBHostLite/usbhost_lpc17xx.c \
 lib/fs/MSCFileSystem/MSCFileSystem.cpp \
 lib/fs/FATFileSystem/FATFileHandle.cpp \
 lib/fs/FATFileSystem/FATFileSystem.cpp \
@@ -59,7 +59,7 @@ LIBOBJ_ = $(LIBSRC:.cpp=.o)
 LIBOBJ__ = $(LIBOBJ_:.c=.o)
 LIBOBJ = $(subst lib/,build/,$(LIBOBJ__))
 
-all: __INIT__ bin/$(APPNAME).bin 
+all: __INIT__ build/fs/MSCFileSystem/USBHostLite/usbhost_lpc17xx.s bin/$(APPNAME).bin 
 
 __INIT__:
 	mkdir -p bin build build/textlcd build/fs/FATFileSystem/ChaN build/fs/MSCFileSystem/USBHostLite
@@ -77,8 +77,14 @@ build/%.o: src/%.cpp
 build/%.o: lib/%.cpp
 	$(CPP) $(INCLUDE) $(CCOPT) -c $< -o $@
 
+build/%.s: lib/%.cpp
+	$(CPP) $(INCLUDE) $(CCOPT) -S $<
+
+build/%.s: lib/%.c
+	$(CPP) $(INCLUDE) $(CCOPT) -S $<
+
 build/%.o: lib/%.c
-	$(CC) $(INCLUDE) $(COPT) -c $< -o $@
+	$(CPP) $(INCLUDE) $(COPT) -c $< -o $@
 
 install: bin/$(APPNAME).bin
 	cp bin/$(APPNAME).bin $(MBEDPATH)

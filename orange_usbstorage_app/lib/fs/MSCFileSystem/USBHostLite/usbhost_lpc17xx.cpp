@@ -47,7 +47,9 @@ volatile  USB_INT08U  *TDBuffer;                  /* Current Buffer Pointer of t
 // AHB SRAM block 1
 #define HOSTBASEADDR 0x2007C000
 // reserve memory for the linker
-static USB_INT08U HostBuf[0x200] __attribute__((at(HOSTBASEADDR)));
+//static USB_INT08U HostBuf[0x200] __attribute__((io(HOSTBASEADDR)));
+//16k is allocated by ld script
+static USB_INT08U *HostBuf = (USB_INT08U *)HOSTBASEADDR;
 /*
 **************************************************************************************************************
 *                                         DELAY IN MILLI SECONDS
@@ -123,7 +125,7 @@ void  Host_DelayUS (USB_INT32U  delay)
 */
 void  Host_Init (void)
 {
-    PRINT_Log("In Host_Init\n");
+  PRINT_Log("In Host_Init: hostbuf %p\n", HostBuf);
     NVIC_DisableIRQ(USB_IRQn);                           /* Disable the USB interrupt source           */
     
     // turn on power for USB
@@ -224,16 +226,21 @@ void USB_IRQHandler (void)
 {
     USB_INT32U   int_status;
     USB_INT32U   ie_status;
-
+    
     int_status    = LPC_USB->HcInterruptStatus;                          /* Read Interrupt Status                */
     ie_status     = LPC_USB->HcInterruptEnable;                          /* Read Interrupt enable status         */
+
+    printf("USB_IRQHandler %X %X %X\n", int_status, ie_status, int_status & ie_status);
  
     if (!(int_status & ie_status)) {
         return;
     } else {
+      printf("USB_IRQHandler handle %X\n", int_status & ie_status);
 
         int_status = int_status & ie_status;
         if (int_status & OR_INTR_STATUS_RHSC) {                 /* Root hub status change interrupt     */
+	  printf("USB_IRQHandler handle RHSC\n");
+
             if (LPC_USB->HcRhPortStatus1 & OR_RH_PORT_CSC) {
                 if (LPC_USB->HcRhStatus & OR_RH_STATUS_DRWE) {
                     /*
@@ -269,12 +276,14 @@ void USB_IRQHandler (void)
                 LPC_USB->HcRhPortStatus1 = OR_RH_PORT_CSC;
             }
             if (LPC_USB->HcRhPortStatus1 & OR_RH_PORT_PRSC) {
+	      printf("USB_IRQHandler handle PRSC\n");
                 LPC_USB->HcRhPortStatus1 = OR_RH_PORT_PRSC;
             }
         }
         if (int_status & OR_INTR_STATUS_WDH) {                  /* Writeback Done Head interrupt        */
-            HOST_WdhIntr = 1;
+	  printf("handle WDH TDStts: %X %X\n", TDHead->Control, (TDHead->Control >> 28) & 0xf);
             HOST_TDControlStatus = (TDHead->Control >> 28) & 0xf;
+            HOST_WdhIntr = 1;
         }            
         LPC_USB->HcInterruptStatus = int_status;                         /* Clear interrupt status register      */
     }
@@ -318,7 +327,7 @@ USB_INT32S  Host_ProcessTD (volatile  HCED       *ed,
     }
     TDHead->Control = (TD_ROUNDING    |
                       token           |
-                      TD_DELAY_INT(0) |                           
+                      TD_DELAY_INT(0) |               
                       td_toggle       |
                       TD_CC);
     TDTail->Control = 0;
@@ -341,9 +350,12 @@ USB_INT32S  Host_ProcessTD (volatile  HCED       *ed,
         LPC_USB->HcBulkHeadED    = (USB_INT32U)ed;
         LPC_USB->HcCommandStatus = LPC_USB->HcCommandStatus | OR_CMD_STATUS_BLF;
         LPC_USB->HcControl       = LPC_USB->HcControl       | OR_CONTROL_BLE;
-    }    
+    }
 
+    printf("TD: wait for interrupt\n");
     Host_WDHWait();
+
+    printf("TD: return from interrupt %d\n", HOST_TDControlStatus);
 
 //    if (!(TDHead->Control & 0xF0000000)) {
     if (!HOST_TDControlStatus) {
@@ -383,9 +395,11 @@ USB_INT32S  Host_EnumDev (void)
     Host_DelayMS(200);                                                 /* Wait for 100 MS after port reset  */
 
     EDCtrl->Control = 8 << 16;                                         /* Put max pkt size = 8              */
-    PRINT_Log("Host_Dev return 2\n");
                                                                        /* Read first 8 bytes of device desc */
     rc = HOST_GET_DESCRIPTOR(USB_DESCRIPTOR_TYPE_DEVICE, 0, TDBuffer, 8);
+    
+    PRINT_Log("Host_Dev return 2 %d\n", rc);
+    
     if (rc != OK) {
         PRINT_Err(rc);
         return (rc);
@@ -458,6 +472,7 @@ USB_INT32S  Host_CtrlRecv (         USB_INT08U   bm_request_type,
 
     Host_FillSetup(bm_request_type, b_request, w_value, w_index, w_length);
     rc = Host_ProcessTD(EDCtrl, TD_SETUP, TDBuffer, 8);
+    printf("Host_CtrlRecv: %d %d result: %d\n", bm_request_type, b_request, rc);
     if (rc == OK) {
         if (w_length) {
             rc = Host_ProcessTD(EDCtrl, TD_IN, TDBuffer, w_length);
