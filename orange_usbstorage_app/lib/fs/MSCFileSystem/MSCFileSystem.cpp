@@ -65,6 +65,8 @@ int MSCFileSystem::initialise_msc()
     
     //print_clock();
     Host_Init();               /* Initialize the  host controller                                    */
+
+
     rc = Host_EnumDev();       /* Enumerate the device connected                                            */
     if (rc != OK)
     {
