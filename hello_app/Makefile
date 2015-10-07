@@ -3,7 +3,7 @@ SRC = src/main.cpp
 
 MBEDPATH = /media/tak/MBED
 TARGET = LPC1768
-TOPDIR = /home/tak/dev/mbed/
+TOPDIR = $(PWD)/../
 MBED_SDK_PATH = $(TOPDIR)/build
 PATCHAPP = $(TOPDIR)/mbed/workspace_tools/patch.py
 TOOLCHAIN_PATH = /home/tak/dev/mbed/toolchain/gcc-arm-none-eabi-4_7-2012q4/bin/

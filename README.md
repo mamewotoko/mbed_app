@@ -2,8 +2,10 @@
 mbed_app: mbed sample app built by make
 ===============================================================================
 
-How to build mbed SDK
----------------------
+How to build mbed SDK (on Ubuntu)
+---------------------------------
+0. Install 32bit libc
+   sudo apt-get install libc6-dev-i386
 1. Install GNU Tools for ARM Embedded Processors
   https://launchpad.net/gcc-arm-embedded/4.7/4.7-2012-q4-major
   Installed location is TOOLCHAIN_PATH
