@@ -21,9 +21,9 @@ How to build mbed SDK (on Ubuntu)
 
 How to try mbed app
 -------------------
-1. Connect mbed device to PC by usb cable
-2. cd hello_app
-3. modify MBED_PATH TARGET TOPDIR MBED_SDK_PATH TOOLCHAIN_PATH
+1. Connect mbed device to PC using usb cable
+2. edit Makefile.config to modify MBED_PATH TARGET TOPDIR MBED_SDK_PATH TOOLCHAIN_PATH 
+3. cd hello_app
 4. make
 5. make install
 6. In case of linux
@@ -36,7 +36,8 @@ App projects
 * hello_app
  printf and led, only depend on mbed
 * hello_led_app
- use library
+ use TextLCD library, target is StarBoard Orange
+ http://mbed.org/users/simon/code/TextLCD/
 
 Files in app project
 --------------------
@@ -51,12 +52,18 @@ TOOLCHAIN_PATH: arm compiler available from the following web page
 
 TODO
 -----------
+* ethernet sample, USB sample
 * create starbord orange library
    * some libraries are contained in mbed (SD, FATFileSystem ...)
+* create more sophisticated Makefile
+   * make subdir under build directory automatically
+* build SDFileSystem, FAT using build.py
 
 Reference
 ---------
 * http://mbed.org/handbook/mbed-tools
+* StarBoard Orange
+  http://mbed.org/cookbook/StarBoard-Orange
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  

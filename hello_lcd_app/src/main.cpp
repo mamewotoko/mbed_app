@@ -1,9 +1,8 @@
-// ugh!: use < >
-#include "mbed.h"
-#include "TextLCD.h"
+#include <mbed.h>
+#include <TextLCD.h>
 
 //using starboard orange
-TextLCD     lcd( p24, p26, p27, p28, p29, p30 ); // rs, e, d0-d3
+TextLCD lcd(p24, p26, p27, p28, p29, p30); // rs, e, d0-d3
 DigitalOut myled(LED3);
 
 int main() {
