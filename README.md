@@ -17,7 +17,7 @@ How to build mbed SDK (on Ubuntu)
 4. Create workspace_tools/private_settings.py from workspace_tools/setting.py
 5. Build mbed using build.py. e.g. Build all libraries for LPC1768
     python workspace_tools/build.py -m LPC1768 -t GCC_ARM -r -e -u -d
-  build directory created as result which contains headers and libraries.
+  A directory named build created as result which contains headers and libraries.
 
 How to try mbed app
 -------------------
