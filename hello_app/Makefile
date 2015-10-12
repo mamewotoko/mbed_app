@@ -23,6 +23,7 @@ build/$(APPNAME).elf: $(APPOBJ)
 
 build/%.o: src/%.cpp
 	echo $<
+#	$(CC) -S $(INCLUDE) $(CCOPT) $< 
 	$(CC) $(INCLUDE) $(CCOPT) $< -o $@
 
 build/%.o: src/%.c
