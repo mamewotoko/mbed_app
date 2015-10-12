@@ -6,8 +6,7 @@ include ../Makefile.config
 
 INCLUDE += -Ilib/textlcd
 
-LIBRARY_PATH = -L$(MBED_SDK_PATH)/mbed/TARGET_$(TARGET)/TOOLCHAIN_$(TOOLCHAIN)
-LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+#LIBRARIES = -lmbed -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
 all: bin build bin/$(APPNAME).bin
 
@@ -18,7 +17,7 @@ bin build:
 	mkdir $@
 
 build/$(APPNAME).elf: $(APPOBJ)
-	$(CC) $(LDOPT) $(LDOBJ) $? $(LIBRARIES) $(LIBRARY_PATH) -o $@
+	$(CC) $(LDOPT) $(LIBRARY_PATH) $? /home/tak/dev/mbed_app/mbed/build/mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/libmbed.a $(LDOBJ) $(LIBRARIES) -o $@
 
 ## ummm: create library
 build/TextLCD.o: lib/textlcd/TextLCD.cpp

@@ -9,7 +9,7 @@ How to build mbed SDK (on Ubuntu)
 1. Install GNU Tools for ARM Embedded Processors
   https://launchpad.net/gcc-arm-embedded/4.7/4.7-2012-q4-major
   Installed location is TOOLCHAIN_PATH
-2. Clone mbed libraries and build tools
+2. Clone mbed libraries and build tools: [Detail](https://github.com/mbedmicro/mbed/blob/master/docs/BUILDING.md)
     git clone https://github.com/mbedmicro/mbed.git
 3. Apply patch to patch.py
     cd mbed
@@ -71,8 +71,8 @@ TODO
 Reference
 ---------
 * http://mbed.org/handbook/mbed-tools
-* StarBoard Orange
-  http://mbed.org/cookbook/StarBoard-Orange
+* [mbed LPC1768](https://developer.mbed.org/platforms/mbed-LPC1768/)
+* [StarBoard Orange](http://mbed.org/cookbook/StarBoard-Orange)
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
