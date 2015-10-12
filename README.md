@@ -19,6 +19,15 @@ How to build mbed SDK (on Ubuntu)
     python workspace_tools/build.py -m LPC1768 -t GCC_ARM -r -e -u -d
   A directory named build created as result which contains headers and libraries.
 
+Directry tree
+-------------
+ + mbed
+ +- build: mbed headers and libs (MBED_SDK_PATH in Makefile.config)
+ + Makefile.config: common makefile settings
+ |
+ + hello_app: led app
+ + netclient2: network client app
+
 How to try mbed app
 -------------------
 1. Connect mbed device to PC using usb cable
