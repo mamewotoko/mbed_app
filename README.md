@@ -1,6 +1,5 @@
-===============================================================================
 mbed_app: mbed sample app built by make
-===============================================================================
+=======================================
 
 How to build mbed SDK (on Ubuntu)
 ---------------------------------
@@ -10,23 +9,33 @@ How to build mbed SDK (on Ubuntu)
   https://launchpad.net/gcc-arm-embedded/4.7/4.7-2012-q4-major
   Installed location is TOOLCHAIN_PATH
 2. Clone mbed libraries and build tools: [Detail](https://github.com/mbedmicro/mbed/blob/master/docs/BUILDING.md)
-    git clone https://github.com/mbedmicro/mbed.git
+```
+  git clone https://github.com/mbedmicro/mbed.git
+```
 3. Apply patch to patch.py
-    cd mbed
-    patch -p1 < ../python-tools.patch
+```
+  cd mbed
+  patch -p1 < ../python-tools.patch
+```
 4. Create workspace_tools/private_settings.py from workspace_tools/setting.py
-5. Build mbed using build.py. e.g. Build all libraries for LPC1768
-    python workspace_tools/build.py -m LPC1768 -t GCC_ARM -r -e -u -d
+5. Build mbed using build.py. 
+   e.g. Build all libraries for LPC1768
+```
+  python workspace_tools/build.py -m LPC1768 -t GCC_ARM -r -e -u -d
+```
   A directory named build created as result which contains headers and libraries.
 
 Directry tree
 -------------
+```
  + mbed
- +- build: mbed headers and libs (MBED_SDK_PATH in Makefile.config)
+ +- build: mbed headers and libs
+ |         (MBED_SDK_PATH in Makefile.config)
  + Makefile.config: common makefile settings
  |
  + hello_app: led app
  + netclient2: network client app
+```
 
 How to try mbed app
 -------------------
@@ -36,7 +45,7 @@ How to try mbed app
 4. make
 5. make install
 6. In case of linux
-    sudo screen /dev/ttyACM0 9600
+  sudo screen /dev/ttyACM0 9600
 7. Push reset button of mbed
 8. "Hello mbed" will be printed to screen and LED1 and LED2 will blink.
 
@@ -76,4 +85,4 @@ Reference
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
-http://www002.upp.so-net.ne.jp/mamewo/
+http://mamewo.ddo.jp/
